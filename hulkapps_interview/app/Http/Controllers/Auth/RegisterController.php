@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
@@ -29,7 +31,18 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    // protected $redirectTo = RouteServiceProvider::HOME;
+
+    // protected function authenticated()
+    // {
+    //     if(Auth::user()->is_verified == '1')
+    //     {
+    //         return redirect('/login')->with('status','Registration Successfully completed.');
+    //     }
+    //     else{
+    //         return redirect('/login');
+    //     }
+    // }
 
     /**
      * Create a new controller instance.
@@ -49,10 +62,14 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        // dd(date('Y-m-d', strtotime($data['dob'])),$data['dob']);
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            // 'dob' => ['required'],
+            'photo' => ['image','mimes:jpeg,png,jpg,svg','max:2048'],
+            // 'address' => ['required'],
         ]);
     }
 
@@ -64,10 +81,27 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        if ($data['photo']) {
+            $image      = $data['photo'];
+            $fileName   = time() . '.' . $image->getClientOriginalExtension();
+
+            Storage::disk('local')->put('images/profile'.'/'.$fileName, 'public');
+        }
+
+        if($data['email']){
+            Mail::send('emails.studentRegistration', ['name' => ucfirst($data['name'])], function ($message) use ($data) {
+                $message->to($data['email']);
+                $message->subject('Student Registration');
+            });
+
+        }
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'date_of_birth' => date('Y-m-d', strtotime($data['dob'])),
+            'address' => $data['address'],
+            'photo' => $fileName,
         ]);
     }
 }
