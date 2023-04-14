@@ -54,6 +54,11 @@
                                 </li>
                             @endif
                         @else
+                            @if (Auth::user()->role_as == 1)
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('import') }}">{{ __('Import') }}</a>
+                                </li>
+                            @endif
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ ucfirst(Auth::user()->name) }}

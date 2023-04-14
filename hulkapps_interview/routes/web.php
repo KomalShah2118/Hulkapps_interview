@@ -27,6 +27,9 @@ Route::group(['middleware' => ['auth','isAdmin']], function () {
     Route::get('/verify-student/{id}', [App\Http\Controllers\AdminController::class, 'verifyStudent'])->name('verify-student');
     Route::get('/student/edit/{id}', [App\Http\Controllers\AdminController::class, 'editStudent'])->name('edit-student');
     Route::post('/student/update/{id}', [App\Http\Controllers\AdminController::class, 'updateStudent'])->name('update-student');
+    Route::get('/export', [App\Http\Controllers\AdminController::class, 'export'])->name('export');
+    Route::get('/import', [App\Http\Controllers\AdminController::class, 'importView'])->name('import');
+    Route::post('/import-data', [App\Http\Controllers\AdminController::class, 'importData'])->name('import-data');
  
  });
 

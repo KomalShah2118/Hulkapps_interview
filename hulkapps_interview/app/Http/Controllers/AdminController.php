@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
+use App\Exports\UsersExport;
+use App\Imports\UsersImport;
+use Excel;
 
 class AdminController extends Controller
 {
@@ -55,6 +58,27 @@ class AdminController extends Controller
         $users->save();
 
         return redirect('/dashboard')->with('status', 'Student Updated Successfully.');
+    }
+
+    public function export(){
+        return Excel::download(new UsersExport, 'users.xlsx');
+    }
+
+    public function importView(){
+        $failures = array();
+        return view('admin.import',compact('failures'));
+    }
+
+    public function importData(){
+        try{
+            Excel::import(new UsersImport,request()->file('file'));
+            return redirect('/dashboard');
+        }
+        catch (\Maatwebsite\Excel\Validators\ValidationException $e)
+        {
+            $failures = $e->failures();
+            return view ('admin.import', compact('failures'));
+        }
     }
 
 }

@@ -51,14 +51,11 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        // dd(date('Y-m-d', strtotime($data['dob'])),$data['dob']);
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            // 'dob' => ['required'],
             'photo' => ['image','mimes:jpeg,png,jpg,svg','max:2048'],
-            // 'address' => ['required'],
         ]);
     }
 

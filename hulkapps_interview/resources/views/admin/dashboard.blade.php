@@ -5,7 +5,9 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Student Details') }}</div>
+                <div class="card-header">
+                    {{ __('Student Details') }}
+                </div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -13,7 +15,10 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
+                    <div class="col-md-12 bg-light text-right">
+                        <!-- <a href="{{ route('import')}}"></a><button type="button" class="btn btn-primary">Import</button> -->
+                        <a href="{{ route('export')}}"><button type="button" class="btn btn-success">Export</button></a>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                         <tr>
