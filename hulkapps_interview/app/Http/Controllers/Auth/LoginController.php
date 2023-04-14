@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -37,7 +38,14 @@ class LoginController extends Controller
         }
         elseif(Auth::user()->role_as == '0') // Normal or Default User Login
         {
-            return redirect('/home')->with('status','Logged in successfully');
+            if(Auth::user()->is_verified == '1'){
+                return redirect('/home')->with('status','Logged in successfully');
+            }
+            else{
+                // $this->middleware('guest')->except('logout');
+                return redirect('/login')->with('status', 'Admin will verify your details soon');
+            }
+            // return redirect('/home')->with('status','Logged in successfully');
         }
         else{
             return redirect('/login');

@@ -33,17 +33,6 @@ class RegisterController extends Controller
      */
     // protected $redirectTo = RouteServiceProvider::HOME;
 
-    // protected function authenticated()
-    // {
-    //     if(Auth::user()->is_verified == '1')
-    //     {
-    //         return redirect('/login')->with('status','Registration Successfully completed.');
-    //     }
-    //     else{
-    //         return redirect('/login');
-    //     }
-    // }
-
     /**
      * Create a new controller instance.
      *
@@ -103,5 +92,17 @@ class RegisterController extends Controller
             'address' => $data['address'],
             'photo' => $fileName,
         ]);
+    }
+
+    public function postRegister(Request $request)
+    {
+        dd($request->all());
+        $validator = $this->validator($request->all());
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+        return redirect($this->redirectPath());
     }
 }
